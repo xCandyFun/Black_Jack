@@ -8,9 +8,277 @@
         body{
             background-color: rgb(80, 200, 120);
         }
+        #gameControls {
+            display: none;
+        }
+        #yourCardsList{
+            display: none;
+        }
+        #startGameButton {
+            display: inline-block;
+        }
+        #gameRulesButton {
+            display: inline-block;
+        }
     </style>
 </head>
 <body>
     <h1>Normal Black Jack</h1>
+
+        <button id="startGameButton">Start Game</button>
+        <a href="http://127.0.0.1:5000/normal_rules" id="gameRulesButton"><button>Normal Rules</button></a>
+
+        <br>
+        <div id="botCardsList">
+            <h3>Bot's Cards:</h3>
+            <input type="text" id="botCardListField" readonly>
+            <h3>Bot's Total Value:</h3>
+            <input type="text" id="botTotalValueField" readonly>
+        </div>
+        <br>
+        <div id="yourCardsList">
+            <h3>Your Cards:</h3>
+            <input type="text" id="cardListField" readonly>
+
+            <h3>Total Value:</h3>
+            <input type="text" id="totalValueField" readonly>
+        </div>
+        <br>
+        <div id="gameControls">
+            <input type="text" id="cardTextField" readonly>
+            <button id="hitButton">Hit</button>
+            <button id="standButton">Stand</button>
+        </div>
+        <br>
+        
+
+    <script>
+
+        let drawnCards = [];
+        let botCards = [];
+        let isGameOver = false;
+
+        const cardValuesMap = {
+            'A': [1, 11],  // Ace can be 1 or 11
+            '2': 2, '3': 3, '4': 4, '5': 5, '6': 6, '7': 7, '8': 8, '9': 9, '10': 10,
+            'J': 10, 'Q': 10, 'K': 10
+        };
+
+        function resetGame() {
+            drawnCards = [];
+            botCards = [];
+            isGameOver = false;
+            const cardListField = document.getElementById("cardListField");
+            const totalValueField = document.getElementById("totalValueField");
+            cardListField.value = "";
+            totalValueField.value = "0";
+
+            const botCardListField = document.getElementById("botCardListField");
+            const botTotalValueField = document.getElementById("botTotalValueField");
+
+            botCardListField.value = "";
+            botTotalValueField.value = "0";
+        }
+
+        document.getElementById("startGameButton").addEventListener("click", function () {
+            document.getElementById("startGameButton").style.display = "none";
+            document.getElementById("gameRulesButton").style.display = "none";
+
+            document.getElementById("gameControls").style.display = "block";
+            document.getElementById("yourCardsList").style.display = "block";
+            document.getElementById("botCardsList").style.display = "block"
+
+            resetGame();
+
+            // Get 2 cards for player
+            fetch("/hit", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            })
+            .then(res => res.json())
+            .then(data => {
+                drawnCards.push(data.card);
+                updateCardList();
+                updateTotalValue();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+
+            fetch("/hit", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            })
+            .then(res => res.json())
+            .then(data => {
+                drawnCards.push(data.card);
+                updateCardList();
+                updateTotalValue();
+            })
+            .catch(error => {
+                console.log('Error:', error)
+            });
+
+            // Get 2 cards for bot (dealer)
+            fetch("/hit", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            })
+            .then(res => res.json())
+            .then(data => {
+                botCards.push(data.card);
+                updateBotCardList();
+                updateBotTotalValue();
+            })
+            .catch(error => {
+                console.log('Error:', error)
+            });
+
+            fetch("/hit", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            })
+            .then(res => res.json())
+            .then(data => {
+                botCards.push(data.card);
+                updateBotCardList();
+                updateBotTotalValue();
+                botPlay();  // Start bot play after getting 2 cards
+            })
+            .catch(error => {
+                console.log('Error:', error)
+            });
+        });
+
+        document.getElementById("hitButton").addEventListener("click", function () {
+            fetch("/hit", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            })
+            .then(res => res.json())
+            .then(data => {
+                drawnCards.push(data.card);
+                updateCardList();
+                updateTotalValue();
+                checkForBust();
+            })
+            .catch(error => {
+                console.error('Error:', error)
+            });
+        });
+
+        document.getElementById("standButton").addEventListener("click", function () {
+            document.getElementById("hitButton").disabled = true;
+            document.getElementById("hitButton").style.display = "none";
+            alert("You have chosen to Stand. Final Total Value: " + document.getElementById("totalValueField").value);
+            document.getElementById("standButton").disabled = true;
+            document.getElementById("standButton").style.display = "none";
+        });
+
+        function botPlay() {
+            while (calculateTotalValue(botCards) < 17) {
+                fetch("/hit", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
+                })
+                .then(res => res.json())
+                .then(data => {
+                    botCards.push(data.card);
+                    updateBotCardList();
+                    updateBotTotalValue();
+                    checkForBotBust();
+                })
+                .catch(error => {
+                    console.log('Error:', error);
+                });
+            }
+
+            if (calculateTotalValue(botCards) >= 17) {
+                alert("Bot has finished with total value: " + calculateTotalValue(botCards));
+            }
+        }
+
+        function checkForBust() {
+            const totalValue = parseInt(document.getElementById("totalValueField").value);
+            if (totalValue > 21) {
+                alert("You have busted! Total value: " + totalValue);
+                document.getElementById("hitButton").disabled = true;
+                document.getElementById("hitButton").style.display = "none";
+                document.getElementById("standButton").disabled = true;
+                document.getElementById("standButton").style.display = "none";
+            }
+        }
+
+        function checkForBotBust() {
+            const botTotalValue = calculateTotalValue(botCards);
+            if (botTotalValue > 21) {
+                alert("Bot has busted! Total value: " + botTotalValue);
+                isGameOver = true;
+                document.getElementById("hitButton").disabled = true;
+                document.getElementById("hitButton").style.display = "none";
+                document.getElementById("standButton").disabled = true;
+                document.getElementById("standButton").style.display = "none";
+            }
+        }
+
+        function updateCardList() {
+            const cardListField = document.getElementById("cardListField");
+            cardListField.value = drawnCards.join(", ");
+        }
+
+        function updateBotCardList() {
+            const botCardListField = document.getElementById("botCardListField");
+            botCardListField.value = botCards.join(", ");
+        }
+
+        function updateTotalValue() {
+            const totalValue = calculateTotalValue(drawnCards);
+            const totalValueField = document.getElementById("totalValueField");
+            totalValueField.value = totalValue;
+        }
+
+        function updateBotTotalValue() {
+            const botTotalValue = calculateTotalValue(botCards);
+            const botTotalValueField = document.getElementById("botTotalValueField");
+            botTotalValueField.value = botTotalValue;
+        }
+
+        function calculateTotalValue(cards) {
+            let totalValue = 0;
+            let aceCount = 0;
+
+            cards.forEach(card => {
+                const cardRank = card.slice(0, -1);
+                if (cardRank === 'A') {
+                    aceCount++;
+                    totalValue += 11;
+                } else {
+                    totalValue += cardValuesMap[cardRank];
+                }
+            });
+
+            while (totalValue > 21 && aceCount > 0) {
+                totalValue -= 10;
+                aceCount--;
+            }
+
+            return totalValue;
+        }
+
+        window.onload = resetGame;
+    </script>
+
 </body>
 </html>

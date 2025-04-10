@@ -1,6 +1,10 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request, jsonify
+
+from normal_black_jack import normal_game
 
 app = Flask(__name__)
+
+game = normal_game()
 
 @app.route('/')
 def home():
@@ -9,6 +13,11 @@ def home():
 @app.route('/normal_game')
 def normal_black_jack():
     return render_template("normal_black_jack.html")
+
+@app.route('/hit', methods=['POST'])
+def hit():
+    card = game.getACard()
+    return jsonify({'card': card})
 
 @app.route('/special_game')
 def special_black_jack():
