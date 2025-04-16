@@ -43,9 +43,9 @@ Follow these steps to run the game locally:
     pip install -r requirements.txt
     ```
 
-6. **Run the Flask app**:
+6. **Run the app**:
     ```bash
-    flask run
+    py flask_server.py
     ```
 
     This will start the Flask development server.
