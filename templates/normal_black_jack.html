@@ -212,6 +212,7 @@
         async function botPlay() {
 
             updateBotCardList();
+            updateBotTotalValue();
 
             while (calculateTotalValue(botCards) < 17) {
                 try{
@@ -224,6 +225,7 @@
 
                     const data = await response.json();
                     botCards.push(data.card);
+
                     updateBotCardList();
                     updateBotTotalValue();
                 
@@ -233,7 +235,7 @@
                         break;
                     }
 
-                    await new Promise(resolve => setTimeout(resolve, 500))
+                    await new Promise(resolve => setTimeout(resolve, 1500))
                 } catch (error) {
                     console.log('Error:', error)
                     break;
@@ -242,10 +244,10 @@
 
             if(!isGameOver){
 
-                alert("Bot has finished with total value: " + calculateTotalValue(botCards));
-
                 const playerTotal = calculateTotalValue(drawnCards);
                 const botTotal = calculateTotalValue(botCards);
+
+                alert("Bot has finished with total value: " + calculateTotalValue(botCards));
 
                 let result = '';
                 if (botTotal > 21 || playerTotal > botTotal){
@@ -258,8 +260,8 @@
 
                 alert(result);
                 isGameOver = true;
+
                 document.getElementById("restartGameButton").style.display = "inline-block";
-                
                 document.getElementById("hitButton").disabled = true;
                 document.getElementById("hitButton").style.display = "none";
                 document.getElementById("standButton").disabled = true;
