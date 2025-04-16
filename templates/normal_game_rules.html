@@ -3,15 +3,160 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Normal Rules</title>
+    <title>Blackjack Rules</title>
     <style>
-        body{
+        body {
+            font-family: 'Arial', sans-serif;
             background-color: rgb(80, 200, 120);
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 2.5rem;
+            color: #2d3e50;
+        }
+
+        p {
+            font-size: 1rem;
+            line-height: 1.6;
+            text-align: justify;
+            margin: 0 20px;
+            color: #555;
+        }
+
+        ul {
+            list-style-type: disc;
+            margin-left: 40px;
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+
+        ul li {
+            margin-bottom: 10px;
+        }
+
+        .rules-container {
+            max-width: 800px;
+            margin: 30px auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            color: #1d3557;
+            margin-bottom: 10px;
+        }
+
+        .section-content {
+            font-size: 1rem;
+            margin-bottom: 20px;
+        }
+
+        .go-back-btn {
+            display: block;
+            width: 150px;
+            margin: 20px auto;
+            padding: 10px 15px;
+            text-align: center;
+            background-color: #1d3557;
+            color: #fff;
+            font-size: 1rem;
+            font-weight: bold;
+            text-decoration: none;
+            border-radius: 5px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        .go-back-btn:hover {
+            background-color: #457b9d;
+            transform: translateY(-2px);
+        }
+
+        .go-back-btn:active {
+            background-color: #1d3557;
+            transform: translateY(2px);
         }
     </style>
 </head>
 <body>
-    <h1>Normal Rules</h1>
-    <a href="http://127.0.0.1:5000/"><button>Go Back</button></a>
+    
+    <br>
+    <div class="rules-container">
+        <h1>Blackjack Rules</h1>
+        <div class="section">
+            <div class="section-title">Card Values</div>
+            <div class="section-content">
+                <ul>
+                    <li>Number cards (2 through 10) are worth their face value.</li>
+                    <li>Face cards (Jack, Queen, King) are each worth 10 points.</li>
+                    <li>The Ace can be worth either 1 point or 11 points, depending on which is more beneficial for the player.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">Game Setup</div>
+            <div class="section-content">
+                <ul>
+                    <li>The game is played with a standard deck of 52 cards.</li>
+                    <li>The player and the dealer are each dealt two cards at the start of the game.</li>
+                    <li>The dealer’s first card is face up, while the second card remains face down.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">Player's Turn</div>
+            <div class="section-content">
+                <ul>
+                    <li>The player can choose to "Hit" (draw a card) or "Stand" (keep their current hand).</li>
+                    <li>The player may continue to draw cards until they either stand or go over 21 points (bust).</li>
+                    <li>If the player’s hand exceeds 21 points, they lose immediately.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">Dealer's Turn</div>
+            <div class="section-content">
+                <ul>
+                    <li>After the player stands, the dealer plays their turn.</li>
+                    <li>The dealer must continue to draw cards until their hand value is at least 17 points.</li>
+                    <li>If the dealer's hand exceeds 21 points (bust), the player wins.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">Winning the Game</div>
+            <div class="section-content">
+                <ul>
+                    <li>If the player’s hand value is higher than the dealer's without busting, the player wins.</li>
+                    <li>If the dealer’s hand value is higher than the player’s without busting, the dealer wins.</li>
+                    <li>If both the player and the dealer have the same hand value, it is a tie (push).</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">Blackjack</div>
+            <div class="section-content">
+                <ul>
+                    <li>If the player or the dealer is dealt an Ace and a 10-point card (10, Jack, Queen, King) as their initial two cards, this is a Blackjack and they win immediately, unless the other player also has a Blackjack, in which case it is a tie.</li>
+                </ul>
+            </div>
+        </div>
+        <a href="http://127.0.0.1:5000/normal_game">
+            <button>Go Back</button>
+        </a>
+    </div>
 </body>
 </html>
