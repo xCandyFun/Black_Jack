@@ -56,10 +56,6 @@ Follow these steps to run the game locally:
 
 Once the app is running, you can open your browser and go to the URL `http://127.0.0.1:5000/`. The interface will guide you through the process of playing Blackjack against the computer.
 
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
 ## Acknowledgments
 
 - This project was built with Python and Flask.
