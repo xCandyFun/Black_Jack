@@ -19,18 +19,9 @@ def hit():
     card = game.getACard()
     return jsonify({'card': card})
 
-@app.route('/special_game')
-def special_black_jack():
-    return render_template("special_black_jack.html")
-
 @app.route('/normal_rules')
 def normal_game_rules():
     return render_template("normal_game_rules.html")
-
-@app.route('/special_rules')
-def special_Game_rules():
-    return render_template("special_game_rules.html")
-
 
 if __name__ == '__main__':
     app.run(debug=True)
