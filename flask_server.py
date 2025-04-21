@@ -1,10 +1,8 @@
 from flask import Flask, render_template, request, jsonify
-
-from normal_black_jack import normal_game
+from normal_black_jack import NormalBlackJackGame
 
 app = Flask(__name__)
-
-game = normal_game()
+game = NormalBlackJackGame()
 
 @app.route('/')
 def home():
@@ -16,7 +14,7 @@ def normal_black_jack():
 
 @app.route('/hit', methods=['POST'])
 def hit():
-    card = game.getACard()
+    card = game.get_a_card()  # use updated method name
     return jsonify({'card': card})
 
 @app.route('/normal_rules')
