@@ -14,7 +14,7 @@ def normal_black_jack():
 
 @app.route('/hit', methods=['POST'])
 def hit():
-    card = game.get_a_card()  # use updated method name
+    card = game.get_a_card()
     return jsonify({'card': card})
 
 @app.route('/normal_rules')
