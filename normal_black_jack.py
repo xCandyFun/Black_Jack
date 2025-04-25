@@ -1,6 +1,5 @@
 import random
 
-# Constants
 CARD_VALUES = {
     'A': (1, 11),
     '2': 2, '3': 3, '4': 4, '5': 5,
@@ -28,7 +27,6 @@ def calculate_total(cards):
         else:
             total += value
 
-    # Adjust for Aces if total is over 21
     while total > 21 and aces > 0:
         total -= 10
         aces -= 1
